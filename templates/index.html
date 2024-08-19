@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Filter</title>
+</head>
+<body>
+    <h1>Filter Owners by Fireplace Type</h1>
+    <form method="post">
+        <label for="fireplace_type">Fireplace Type:</label>
+        <select name="fireplace_type" id="fireplace_type">
+            <option value="">Select a type</option>
+            {% for fireplace_type in fireplace_types %}
+                <option value="{{ fireplace_type['description'] }}">{{ fireplace_type['description'] }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+
+    {% if filter_applied %}
+        <h2>Filtered Results</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Unique ID</th>
+                    <th>Parcel ID</th>
+                    <th>Owner Name</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for owner in owners %}
+                    <tr>
+                        <td>{{ owner['unique_id'] }}</td>
+                        <td>{{ owner['parcel_id'] }}</td>
+                        <td>{{ owner['owner_last_name'] }}, {{ owner['owner_init_name'] }}</td>
+                        <td>{{ owner['concatenated_address_1'] }}</td>
+                        <td>{{ owner['mail_city'] }}</td>
+                        <td>{{ owner['owner_mail_state'] }}</td>
+                        <td>{{ owner['mail_zip'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('export', fireplace_type=request.form.get('fireplace_type')) }}">Export to CSV</a>
+    {% endif %}
+</body>
+</html>
